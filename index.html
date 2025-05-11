@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notyf - 通知插件演示</title>
+    <link rel="stylesheet" href="../assets/css/message.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .demo-area {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .success-btn { background: #4CAF50; color: white; }
+        .danger-btn { background: #F44336; color: white; }
+        .warning-btn { background: #FF9800; color: white; }
+        .info-btn { background: #2196F3; color: white; }
+        .custom-btn { background: #9C27B0; color: white; }
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
+        h1 { color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .code-block {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notyf 通知插件演示</h1>
+    
+    <div class="demo-area">
+        <button class="success-btn" onclick="notyf('订单支付成功')">成功消息</button>
+        <button class="danger-btn" onclick="notyf('系统发生错误', 'danger')">错误消息</button>
+        <button class="warning-btn" onclick="notyf('磁盘空间不足', 'warning', 5000)">警告(5秒)</button>
+        <button class="info-btn" onclick="notyf('新消息到达', 'info', 0)">持久消息</button>
+        <button class="custom-btn" onclick="showUpdatableNotify()">可更新消息</button>
+        <button onclick="notyf_close($('.noty1').first())">关闭第一条</button>
+    </div>
+
+    <h2>使用代码示例</h2>
+    <div class="code-block">
+        <pre><code>// 基本用法
+notyf("操作成功完成");
+notyf("发生错误", "danger", 5000);
+
+// 可更新的消息
+var msgId = "progress-notify";
+notyf("处理中...", "info", 0, msgId);
+
+// 3秒后更新消息
+setTimeout(() => {
+    notyf("处理完成", "success", 2000, msgId);
+}, 3000);
+
+// 手动关闭
+notyf_close($('.noty1').eq(0));</code></pre>
+    </div>
+
+    <script src="../assets/js/message.js"></script>
+    
+    <script>
+        // 演示可更新消息
+        function showUpdatableNotify() {
+            var msgId = "progress-notify";
+            notyf("文件上传中... 0%", "info", 0, msgId);
+            
+            var progress = 0;
+            var interval = setInterval(() => {
+                progress += 10;
+                var msg = "文件上传中... " + progress + "%";
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    notyf("上传完成！", "success", 3000, msgId);
+                } else {
+                    notyf(msg, "info", 0, msgId);
+                }
+            }, 300);
+        }
+    </script>
+</body>
+</html>
